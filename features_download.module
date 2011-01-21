@@ -15,21 +15,23 @@ function features_download_form_alter(&$form, $form_state, $form_id) {
   if ($form_id == 'features_export_form') {
     $form['buttons']['create'] = array(
       '#type' => 'submit',
-      '#value' => t('Create feature'),
+      '#value' => t('Auto create feature'),
       '#weight' => 10,
       '#submit' => array('features_download_export_build_form_submit'),
     );
     $form['features_download_dest'] = array(
-          '#title' => t('Custom module path inside sites/all/modules'),
-          '#description' => t('the root folder will be sites/all/modules'),
-          '#type' => 'textfield',
+      '#title' => t('Custom module path inside sites/all/modules/'),
+      '#description' => t('the root folder will be sites/all/modules/'),
+      '#type' => 'textfield',
+      '#default_value' => $form['#feature']->name ? drupal_get_path('module', $form['#feature']->name) : 'sites/all/modules',
     );
-    $form['features_download_create_machine_dir'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Create machine name dir'),
-      '#description' => t('Put the feature in is machine name dir'),
-      '#default_value' => true,
-    );
+    //TODO: I think this should be automatic: on creation ON and on recreation OFF
+//    $form['features_download_create_machine_dir'] = array(
+//      '#type' => 'checkbox',
+//      '#title' => t('Create machine name dir'),
+//      '#description' => t('Put the feature in is machine name dir'),
+//      '#default_value' => true,
+//    );
   }
 }
 function features_download_export_build_form_submit($form, &$form_state) {
@@ -71,12 +73,13 @@ function features_download_export_build_form_submit($form, &$form_state) {
     $export['project status url'] = $form_state['values']['project_status_url'];
   }
   // Generate download
-  $directory = 'sites/all/modules/';
+  $directory = '';
   $dest = $form_state['values']['features_download_dest'];
   if ($dest) {
     $directory .= $dest . '/'; 
   }
-  if ($form_state['values']['features_download_create_machine_dir']) {
+  //TODO: find a better term then arg(3) to finf if we are on create page or recreat.
+  if (arg(3) == 'create'/*$form_state['values']['features_download_create_machine_dir']*/) {
     $directory .=  $module_name;
   }
   if ($files = features_export_render($export, $module_name, TRUE)) {
