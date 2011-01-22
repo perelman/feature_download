@@ -43,11 +43,18 @@ function features_download_drush_help($section) {
 /**
  * git pull.
  */
+//One of the problems working with Git and features module, 
+//is when you pulling from git before you update you feature changes to code.
+//Well, now (let say you got some feature changes comming form the pull) you have to deside, 
+//revert the feature and ignore all of your settings change or recreate the feature and override some else job.
+//This drush command is tring to help you enforce the very basic procedures of 
+//"Alwayes update your feature to code before you pulling from git"
 function drush_features_download_git_pull($force = '') {
   if (_git_ready() || ($force == 'force' && _confirm())) {
-  exec('git pull 2>&1', $output);
+    exec('git pull 2>&1', $output);
     foreach ($output as $line) {
       drush_print(dt($line));
+      drush_print(dt('A new base code might changed please check if your feature need to revert (drush fr).'));
     }
     //TODO: learn to work with "drush_shell_exec('git pull')" and maybe "drush_shell_exec_output()"
   }
@@ -56,13 +63,11 @@ function drush_features_download_git_pull($force = '') {
  * git push.
  */
 function drush_features_download_git_push($force = '') {
-  if (_git_ready() || ($force == 'force' && _confirm())) {
-   exec('git pull 2>&1', $output);
-    foreach ($output as $line) {
-      drush_print(dt($line));
-    }
-    //TODO: learn to work with "drush_shell_exec('git pull')" and maybe "drush_shell_exec_output()"
+  exec('git push 2>&1', $output);
+  foreach ($output as $line) {
+    drush_print(dt($line));
   }
+  //TODO: learn to work with "drush_shell_exec('git pull')" and maybe "drush_shell_exec_output()"
 }
 
 
@@ -79,7 +84,7 @@ function _git_ready() {
     }
   }
   if (!empty($overridden_modules)) {
-    drush_print(dt('The following modules are overridden: (!modules) please check your features ', array('!modules' => implode(' | ', $overridden_modules))));
+    drush_print(dt('The following modules are overridden: (!modules) please update your features BEFORE you continue with pulling new code (drush fu or drush fe)', array('!modules' => implode(' | ', $overridden_modules))));
     return FALSE;
   }
   else {drush_print(dt('true'));
