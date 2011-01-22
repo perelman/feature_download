@@ -54,8 +54,8 @@ function drush_features_download_git_pull($force = '') {
     exec('git pull 2>&1', $output);
     foreach ($output as $line) {
       drush_print(dt($line));
-      drush_print(dt('A new base code might changed please check if your feature need to revert (drush fr).'));
     }
+    drush_print(dt('A new base code might changed please check if your feature need to revert (drush fr).'));
     //TODO: learn to work with "drush_shell_exec('git pull')" and maybe "drush_shell_exec_output()"
   }
 }
