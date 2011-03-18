@@ -78,7 +78,7 @@ function features_download_export_build_form_submit($form, &$form_state) {
   if ($dest) {
     $directory .= $dest . '/'; 
   }
-  //TODO: find a better term then arg(3) to finf if we are on create page or recreat.
+  //TODO: find a better term then arg(3) to find if we are on create page or recreat.
   if (arg(3) == 'create'/*$form_state['values']['features_download_create_machine_dir']*/) {
     $directory .=  $module_name;
   }
