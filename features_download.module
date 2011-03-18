@@ -25,13 +25,6 @@ function features_download_form_alter(&$form, $form_state, $form_id) {
       '#type' => 'textfield',
       '#default_value' => $form['#feature']->name ? drupal_get_path('module', $form['#feature']->name) : 'sites/all/modules',
     );
-    //TODO: I think this should be automatic: on creation ON and on recreation OFF
-//    $form['features_download_create_machine_dir'] = array(
-//      '#type' => 'checkbox',
-//      '#title' => t('Create machine name dir'),
-//      '#description' => t('Put the feature in is machine name dir'),
-//      '#default_value' => true,
-//    );
   }
 }
 function features_download_export_build_form_submit($form, &$form_state) {
