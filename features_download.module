@@ -1,6 +1,6 @@
 <?php
 
-// $Id:
+// $Id$
 
 /**
  * @file
@@ -40,7 +40,7 @@ function features_download_export_build_form_submit($form, &$form_state) {
       $stub[$component] = features_dom_decode_options(array_filter($form_state['values']['sources'][$component]));
     }
     // Only fallback to an existing feature's values if there are no export options for the component.
-    else if (!empty($form['#feature']->info['features'][$component])) {
+    elseif (!empty($form['#feature']->info['features'][$component])) {
       $stub[$component] = $form['#feature']->info['features'][$component];
     }
   }
@@ -72,12 +72,12 @@ function features_download_export_build_form_submit($form, &$form_state) {
     $directory .= $dest . '/'; 
   }
   //TODO: find a better term then arg(3) to find if we are on create page or recreat.
-  if (arg(3) == 'create'/*$form_state['values']['features_download_create_machine_dir']*/) {
+  if (arg(3) == 'create') {
     $directory .=  $module_name;
   }
   if ($files = features_export_render($export, $module_name, TRUE)) {
-    if(!file_exists($directory)) {
-      mkdir($directory,0777,true);
+    if (!file_exists($directory)) {
+      mkdir($directory, 0777, TRUE);
     }
     foreach ($files as $extension => $file_contents) {
       if (!in_array($extension, array('module', 'info'))) {
@@ -85,6 +85,5 @@ function features_download_export_build_form_submit($form, &$form_state) {
       }
       file_put_contents("{$directory}/{$module_name}.$extension", $file_contents);
     }
-//    watchdog("Created module: !module in !directory", array('!module' => $module_name, '!directory' => $directory));
   }
 }
